@@ -9,4 +9,5 @@ class Fine extends Model
 {
     /** @use HasFactory<\Database\Factories\FineFactory> */
     use HasFactory;
+    protected $guarded = ['id'];
 }

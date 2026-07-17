@@ -9,4 +9,5 @@ class LoanDetail extends Model
 {
     /** @use HasFactory<\Database\Factories\LoanDetailFactory> */
     use HasFactory;
+    protected $guarded = ['id'];
 }
