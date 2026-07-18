@@ -21,5 +21,10 @@ class DatabaseSeeder extends Seeder
             'name' => 'Test User',
             'email' => 'test@example.com',
         ]);
+
+        // Panggil SettingSeeder di sini
+        $this->call([
+            SettingSeeder::class,
+        ]);
     }
 }

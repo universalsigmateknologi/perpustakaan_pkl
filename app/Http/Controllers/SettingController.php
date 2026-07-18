@@ -7,12 +7,32 @@ use Illuminate\Http\Request;
 
 class SettingController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    // Menampilkan form pengaturan
     public function index()
     {
-        //
+        // Ambil data pertama (id=1). Jika belum ada, buat instance baru default
+        $setting = Setting::firstOrNew(['id' => 1]);
+        
+        return view('admin.settings.index', compact('setting'));
+    }
+
+    // Menyimpan / Update pengaturan
+    public function update(Request $request)
+    {
+        $request->validate([
+            'nama_perpustakaan' => 'required|string',
+            'denda_per_hari' => 'required|integer|min:0',
+            'maksimal_hari_pinjam' => 'required|integer|min:1',
+            'batas_jumlah_buku' => 'required|integer|min:1',
+        ]);
+
+        // UpdateOrCreate akan selalu mengupdate data dengan ID 1, tidak akan membuat ID 2
+        Setting::updateOrCreate(
+            ['id' => 1],
+            $request->all()
+        );
+
+        return redirect()->back()->with('success', 'Pengaturan berhasil diperbarui!');
     }
 
     /**
@@ -43,14 +63,6 @@ class SettingController extends Controller
      * Show the form for editing the specified resource.
      */
     public function edit(Setting $setting)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Setting $setting)
     {
         //
     }
