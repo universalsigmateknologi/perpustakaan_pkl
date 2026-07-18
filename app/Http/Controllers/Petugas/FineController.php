@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Petugas;
 
-use App\Models\shelve;
+use App\Http\Controllers\Controller;
+use App\Models\Fine;
 use Illuminate\Http\Request;
 
-class ShelveController extends Controller
+class FineController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -34,7 +35,7 @@ class ShelveController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(shelve $shelve)
+    public function show(Fine $fine)
     {
         //
     }
@@ -42,7 +43,7 @@ class ShelveController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(shelve $shelve)
+    public function edit(Fine $fine)
     {
         //
     }
@@ -50,7 +51,7 @@ class ShelveController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, shelve $shelve)
+    public function update(Request $request, Fine $fine)
     {
         //
     }
@@ -58,7 +59,7 @@ class ShelveController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(shelve $shelve)
+    public function destroy(Fine $fine)
     {
         //
     }

@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
-use App\Models\Books;
+use App\Http\Controllers\Controller;
+use App\Models\Shelve;
 use Illuminate\Http\Request;
 
-class BooksController extends Controller
+class ShelfController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -34,7 +35,7 @@ class BooksController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Books $books)
+    public function show(Shelve $shelve)
     {
         //
     }
@@ -42,7 +43,7 @@ class BooksController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Books $books)
+    public function edit(Shelve $shelve)
     {
         //
     }
@@ -50,7 +51,7 @@ class BooksController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Books $books)
+    public function update(Request $request, Shelve $shelve)
     {
         //
     }
@@ -58,7 +59,7 @@ class BooksController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Books $books)
+    public function destroy(Shelve $shelve)
     {
         //
     }

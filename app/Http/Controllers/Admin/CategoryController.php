@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
-use App\Models\BookReturn;
+use App\Http\Controllers\Controller;
+use App\Models\Category;
 use Illuminate\Http\Request;
 
-class BookReturnController extends Controller
+class CategoryController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -34,7 +35,7 @@ class BookReturnController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(BookReturn $bookReturn)
+    public function show(Category $category)
     {
         //
     }
@@ -42,7 +43,7 @@ class BookReturnController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(BookReturn $bookReturn)
+    public function edit(Category $category)
     {
         //
     }
@@ -50,7 +51,7 @@ class BookReturnController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, BookReturn $bookReturn)
+    public function update(Request $request, Category $category)
     {
         //
     }
@@ -58,7 +59,7 @@ class BookReturnController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(BookReturn $bookReturn)
+    public function destroy(Category $category)
     {
         //
     }

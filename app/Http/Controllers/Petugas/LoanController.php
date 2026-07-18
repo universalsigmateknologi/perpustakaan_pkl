@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Petugas;
 
-use App\Models\Member;
+use App\Http\Controllers\Controller;
+use App\Models\Loan;
 use Illuminate\Http\Request;
 
-class MemberController extends Controller
+class LoanController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -34,7 +35,7 @@ class MemberController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Member $member)
+    public function show(Loan $loan)
     {
         //
     }
@@ -42,7 +43,7 @@ class MemberController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Member $member)
+    public function edit(Loan $loan)
     {
         //
     }
@@ -50,7 +51,7 @@ class MemberController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Member $member)
+    public function update(Request $request, Loan $loan)
     {
         //
     }
@@ -58,7 +59,7 @@ class MemberController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Member $member)
+    public function destroy(Loan $loan)
     {
         //
     }
