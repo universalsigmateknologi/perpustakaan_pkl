@@ -8,32 +8,7 @@
     <title>@yield('title', 'Dashboard Admin — Perpustakaan')</title>
 
     <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
-                    },
-                    colors: {
-                        brand: {
-                            50: '#f8f9fb',
-                            100: '#f0f2f5',
-                            200: '#e2e6eb',
-                            300: '#c8cdd5',
-                            400: '#9ca3af',
-                            500: '#6b7280',
-                            600: '#4b5563',
-                            700: '#374151',
-                            800: '#1f2937',
-                            900: '#111827',
-                        },
-                    },
-                },
-            },
-        }
-    </script>
+    <link rel="stylesheet" href="{{ asset('css/output.css') }}">
 
     <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -255,21 +230,43 @@
                     <div class="w-px h-6 bg-brand-200"></div>
 
                     <!-- User Profile -->
-                    <button type="button"
-                            class="flex items-center gap-3 p-1.5 rounded-lg hover:bg-brand-50 smooth-transition focus:outline-none focus:ring-2 focus:ring-brand-200"
-                            aria-label="Profil Pengguna">
-                        <div class="w-8 h-8 rounded-full bg-brand-200 flex items-center justify-center text-xs font-semibold text-brand-600 flex-shrink-0">
-                            {{ Auth::user()->initials ?? 'AD' }}
+                    <div class="relative" id="userMenuWrapper">
+                        <button type="button" id="userMenuButton"
+                                class="flex items-center gap-3 p-1.5 rounded-lg hover:bg-brand-50 smooth-transition focus:outline-none focus:ring-2 focus:ring-brand-200"
+                                aria-label="Profil Pengguna" aria-expanded="false" aria-controls="userMenuDropdown">
+                            <div class="w-8 h-8 rounded-full bg-brand-200 flex items-center justify-center text-xs font-semibold text-brand-600 flex-shrink-0">
+                                {{ Auth::user()->initials ?? 'AD' }}
+                            </div>
+                            <div class="hidden sm:flex flex-col items-start text-left">
+                                <span class="text-sm font-medium text-brand-900 leading-tight">{{ Auth::user()->name ?? 'Admin Dinda' }}</span>
+                                <span class="text-xs text-brand-400 leading-tight">{{ Auth::user()->role ?? 'Administrator' }}</span>
+                            </div>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                                 stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-brand-400 hidden sm:block">
+                                <polyline points="6 9 12 15 18 9"/>
+                            </svg>
+                        </button>
+
+                        <div id="userMenuDropdown" class="hidden absolute right-0 mt-2 w-56 overflow-hidden rounded-xl border border-brand-200 bg-white py-2 shadow-lg z-50">
+                            <div class="px-4 py-3 border-b border-brand-100">
+                                <p class="text-sm font-semibold text-brand-900">{{ Auth::user()->name ?? 'Admin Dinda' }}</p>
+                                <p class="text-xs text-brand-400">{{ Auth::user()->role ?? 'Administrator' }}</p>
+                            </div>
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit"
+                                        class="flex w-full items-center gap-2 px-4 py-2.5 text-sm text-brand-600 hover:bg-brand-50 hover:text-brand-900 smooth-transition">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                                         stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4">
+                                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                                        <polyline points="16 17 21 12 16 7"/>
+                                        <line x1="21" y1="12" x2="9" y2="12"/>
+                                    </svg>
+                                    <span>Logout</span>
+                                </button>
+                            </form>
                         </div>
-                        <div class="hidden sm:flex flex-col items-start text-left">
-                            <span class="text-sm font-medium text-brand-900 leading-tight">{{ Auth::user()->name ?? 'Admin Dinda' }}</span>
-                            <span class="text-xs text-brand-400 leading-tight">{{ Auth::user()->role ?? 'Administrator' }}</span>
-                        </div>
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
-                             stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-brand-400 hidden sm:block">
-                            <polyline points="6 9 12 15 18 9"/>
-                        </svg>
-                    </button>
+                    </div>
                 </div>
             </header>
 
@@ -278,7 +275,7 @@
                 <div class="p-8 max-w-7xl mx-auto space-y-8">
                     {{-- Page Title & Breadcrumb --}}
                     <div>
-                        <h1 class="text-2xl font-semibold text-brand-900 tracking-tight">@yield('page_title', 'Dashboard')</h1>
+                        <h1 class="text-2xl font-semibold text-brand-900 tracking-tight">@yield('page_title')</h1>
                         @hasSection('page_description')
                             <p class="text-sm text-brand-400 mt-0.5">@yield('page_description')</p>
                         @endif
@@ -292,5 +289,36 @@
     </div>
 
     @stack('scripts')
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const wrapper = document.getElementById('userMenuWrapper');
+            const button = document.getElementById('userMenuButton');
+            const dropdown = document.getElementById('userMenuDropdown');
+
+            if (!wrapper || !button || !dropdown) return;
+
+            button.addEventListener('click', function (event) {
+                event.stopPropagation();
+                const isHidden = dropdown.classList.contains('hidden');
+                dropdown.classList.toggle('hidden', !isHidden);
+                button.setAttribute('aria-expanded', isHidden ? 'true' : 'false');
+            });
+
+            document.addEventListener('click', function (event) {
+                if (!wrapper.contains(event.target)) {
+                    dropdown.classList.add('hidden');
+                    button.setAttribute('aria-expanded', 'false');
+                }
+            });
+
+            document.addEventListener('keydown', function (event) {
+                if (event.key === 'Escape') {
+                    dropdown.classList.add('hidden');
+                    button.setAttribute('aria-expanded', 'false');
+                }
+            });
+        });
+    </script>
 </body>
 </html>
