@@ -59,7 +59,7 @@
                             <td class="py-3 px-2 font-mono text-xs">{{ $loan->kode_pinjam }}</td>
                             <td class="py-3 px-2 text-gray-800">{{ $loan->member->nama }}</td>
                             <td class="py-3 px-2 text-gray-600">{{ $loan->user->name }}</td>
-                            <td class="py-3 px-2 text-gray-600">{{ $loan->tanggal_pinjam->format('d M Y') }}</td>
+                            <td class="py-3 px-2 text-gray-600">{{ \Carbon\Carbon::parse($loan->tanggal_pinjam)->format('d M Y') }}</td>
                             <td class="py-3 px-2">
                                 <span class="px-2 py-1 text-xs {{ $loan->status == 'dipinjam' ? 'bg-blue-50 text-blue-600' : 'bg-green-50 text-green-600' }}">
                                     {{ ucfirst($loan->status) }}

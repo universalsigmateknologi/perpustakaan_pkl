@@ -1,3 +1,5 @@
+<td class="py-3 px-2 text-gray-600">{{ $loan->tanggal_pinjam->format('d M Y') }}</td>
+
 
 ---
 
@@ -47,7 +49,7 @@ Hak akses operasional sehari-hari (Frontliner). Fokus tugas Petugas adalah melay
    - Menentukan `tanggal_kembali` (Tanggal hari ini + `maksimal_hari_pinjam`).
    - Status transaksi menjadi `dipinjam`.
 
-### Alur 4: Pengembalian Buku & Denda (Oleh Petugas)
+### Alur: Pengembalian Buku & Denda (Oleh Petugas)
 1. Anggota datang mengembalikan buku.
 2. Petugas mencari transaksi peminjaman aktif (berdasarkan kode/nama anggota).
 3. Petugas memproses tombol "Kembalikan". Sistem otomatis:

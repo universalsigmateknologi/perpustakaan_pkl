@@ -1,66 +1,47 @@
 <?php
 
-namespace App\Http\Controllers\Petugas;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Models\Fine;
 use Illuminate\Http\Request;
+use App\Models\Fine;
 
 class FineController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $search = $request->input('search');
+        $status = $request->input('status');
+
+        $fines = Fine::with(['member', 'loan'])
+            ->when($search, function ($query) use ($search) {
+                $query->where('kode_denda', 'like', "%{$search}%")
+                      ->orWhereHas('member', function ($q) use ($search) {
+                          $q->where('nama', 'like', "%{$search}%")
+                            ->orWhere('kode_member', 'like', "%{$search}%");
+                      });
+            })
+            ->when($status, function ($query) use ($status) {
+                $query->where('status', $status);
+            })
+            ->latest()
+            ->paginate(10);
+
+        return view('main_menu.denda.index', compact('fines'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function pay(Fine $fine)
     {
-        //
-    }
+        // Pastikan denda belum lunas
+        if ($fine->status == 'lunas') {
+            return back()->with('error', 'Denda ini sudah berstatus lunas.');
+        }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+        $fine->update([
+            'status' => 'lunas',
+            'tanggal_bayar' => now()->toDateString(),
+        ]);
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Fine $fine)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Fine $fine)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Fine $fine)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Fine $fine)
-    {
-        //
+        return redirect()->route('denda.index')
+                         ->with('success', 'Pembayaran denda berhasil dikonfirmasi. Status sekarang LUNAS.');
     }
 }

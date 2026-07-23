@@ -47,10 +47,10 @@
                 <a href="{{ route('loans.create') }}" class="flex items-center px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-sm transition-colors {{ request()->routeIs('loans.*') ? 'bg-gray-100 text-gray-900' : '' }}">
                     <span>Peminjaman</span>
                 </a>
-                <a href="#" class="flex items-center px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-sm transition-colors">
+                <a href="{{ route('book_returns.index') }}" class="flex items-center px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-sm transition-colors {{ request()->routeIs('book_returns.*') ? 'bg-gray-100 text-gray-900' : '' }}">
                     <span>Pengembalian</span>
                 </a>
-                <a href="#" class="flex items-center px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-sm transition-colors">
+                <a href="{{ route('denda.index') }}" class="flex items-center px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-sm transition-colors {{ request()->routeIs('denda.*') ? 'bg-gray-100 text-gray-900' : '' }}">
                     <span>Denda</span>
                 </a>
 

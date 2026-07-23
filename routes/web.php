@@ -10,6 +10,8 @@ use App\Http\Controllers\Admin\PublisherController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\ShelfController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\BookReturnController;
+use App\Http\Controllers\FineController;
 use App\Http\Controllers\LoanController;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\Petugas\DashboardController as PetugasDashboardController;
@@ -48,6 +50,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/loans', [LoanController::class, 'index'])->name('loans.index');
     Route::get('/loans/create', [LoanController::class, 'create'])->name('loans.create');
     Route::post('/loans', [LoanController::class, 'store'])->name('loans.store');
+
+    Route::get('/book-returns', [BookReturnController::class, 'index'])->name('book_returns.index');
+    Route::post('/book-returns/{loan}', [BookReturnController::class, 'process'])->name('book_returns.process');
+
+    // Route Denda
+    Route::get('/denda', [FineController::class, 'index'])->name('denda.index');
+    Route::patch('/denda/{fine}/pay', [FineController::class, 'pay'])->name('denda.pay');
 
     // Grup Route Khusus Admin
     Route::middleware('role:admin')->prefix('admin')->name('admin.')->group(function () {

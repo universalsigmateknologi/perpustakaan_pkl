@@ -13,6 +13,12 @@ class Loan extends Model
         'tanggal_kembali', 'tanggal_dikembalikan', 'status', 'catatan'
     ];
 
+    protected $casts = [
+        'tanggal_pinjam' => 'date',
+        'tanggal_kembali' => 'date',
+        'tanggal_dikembalikan' => 'date',
+    ];
+
     public function member()
     {
         return $this->belongsTo(Member::class);
