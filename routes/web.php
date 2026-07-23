@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\PublisherController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\ShelfController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\MemberController;
 use App\Http\Controllers\Petugas\DashboardController as PetugasDashboardController;
 
 /*
@@ -38,6 +39,9 @@ Route::middleware('auth')->group(function () {
         }
         return redirect()->route('petugas.dashboard');
     })->name('dashboard');
+
+    // Route Manajemen Anggota (Bisa diakses Admin & Petugas)
+    Route::resource('members', MemberController::class);
 
     // Grup Route Khusus Admin
     Route::middleware('role:admin')->prefix('admin')->name('admin.')->group(function () {
