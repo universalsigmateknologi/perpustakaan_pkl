@@ -1,65 +1,69 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
-use App\Models\Author;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Author;
 
 class AuthorController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $search = $request->input('search');
+        $authors = Author::when($search, function ($query) use ($search) {
+            $query->where('nama_penulis', 'like', "%{$search}%")
+                  ->orWhere('kode_penulis', 'like', "%{$search}%");
+        })->latest()->paginate(10);
+
+        return view('masters.writer_publisher.authors_index', compact('authors'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        return view('masters.writer_publisher.authors_create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'nama_penulis' => 'required|string|max:255',
+            'biografi'     => 'nullable|string',
+        ]);
+
+        // Generate kode penulis (PNL-0001)
+        $lastItem = Author::latest('id')->first();
+        $lastNumber = $lastItem ? (int) str_replace('PNL-', '', $lastItem->kode_penulis) : 0;
+        $validated['kode_penulis'] = 'PNL-' . str_pad($lastNumber + 1, 4, '0', STR_PAD_LEFT);
+
+        Author::create($validated);
+
+        return redirect()->route('admin.authors.index')
+                         ->with('success', 'Data penulis berhasil ditambahkan.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Author $author)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Author $author)
     {
-        //
+        return view('masters.writer_publisher.authors_edit', compact('author'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Author $author)
     {
-        //
+        $validated = $request->validate([
+            'nama_penulis' => 'required|string|max:255',
+            'biografi'     => 'nullable|string',
+        ]);
+
+        $author->update($validated);
+
+        return redirect()->route('admin.authors.index')
+                         ->with('success', 'Data penulis berhasil diperbarui.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Author $author)
     {
-        //
+        $author->delete();
+        return redirect()->route('admin.authors.index')
+                         ->with('success', 'Data penulis berhasil dihapus.');
     }
 }

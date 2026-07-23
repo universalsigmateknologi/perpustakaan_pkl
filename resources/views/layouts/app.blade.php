@@ -61,13 +61,13 @@
                 <a href="#" class="flex items-center px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-sm transition-colors">
                     <span>Data Buku</span>
                 </a>
-                <a href="#" class="flex items-center px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-sm transition-colors">
+                <a href="{{ route('admin.categories.index') }}" class="flex items-center px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-sm transition-colors {{ request()->routeIs('admin.categories.*') ? 'bg-gray-100 text-gray-900' : '' }}">
                     <span>Kategori</span>
                 </a>
-                <a href="#" class="flex items-center px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-sm transition-colors">
+                <a href="{{ route('admin.etalase.index') }}" class="flex items-center px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-sm transition-colors {{ request()->routeIs('admin.etalase.*') ? 'bg-gray-100 text-gray-900' : '' }}">
                     <span>Rak & Etalase</span>
                 </a>
-                <a href="#" class="flex items-center px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-sm transition-colors">
+                <a href="{{ route('admin.authors.index') }}" class="flex items-center px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-sm transition-colors {{ request()->routeIs('admin.authors.*') || request()->routeIs('admin.publishers.*') ? 'bg-gray-100 text-gray-900' : '' }}">
                     <span>Penulis & Penerbit</span>
                 </a>
 
