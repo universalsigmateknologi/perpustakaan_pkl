@@ -1,21 +1,52 @@
 <?php
 
-use App\Http\Controllers\Auth\AuthController;
-use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\Petugas\DashboardController as PetugasDashboardController;
 
-// Halaman yang bisa diakses tanpa login
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+*/
+
+// Route Autentikasi
 Route::get('/', function () {
     return redirect()->route('login');
 });
 
-Route::get('/login', [AuthController::class, 'index'])->name('login');
-Route::post('/login', [AuthController::class, 'login']);
+Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login')->middleware('guest');
+Route::post('/login', [AuthController::class, 'login'])->name('login.post')->middleware('guest');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
 
-Route::middleware(['auth'])->group(function () {
-    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+// Route yang butuh login
+Route::middleware('auth')->group(function () {
     
-    // Nanti route master data & transaksi ditaruh di sini
+    // Redirect otomatis berdasarkan role setelah login
+    Route::get('/dashboard', function () {
+        if (auth()->user()->role === 'admin') {
+            return redirect()->route('admin.dashboard');
+        }
+        return redirect()->route('petugas.dashboard');
+    })->name('dashboard');
+
+    // Grup Route Khusus Admin
+    Route::middleware('role:admin')->prefix('admin')->name('admin.')->group(function () {
+        Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+        Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
+        Route::put('/settings', [SettingController::class, 'update'])->name('settings.update');
+        
+        // Nantinya route master data admin akan ditaruh di sini
+    });
+
+    // Grup Route Khusus Petugas
+    Route::middleware('role:petugas')->prefix('petugas')->name('petugas.')->group(function () {
+        Route::get('/dashboard', [PetugasDashboardController::class, 'index'])->name('dashboard');
+        
+        // Nantinya route operasional petugas akan ditaruh di sini
+    });
+
 });

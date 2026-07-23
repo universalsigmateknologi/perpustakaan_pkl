@@ -22,11 +22,11 @@ class DatabaseSeeder extends Seeder
 
         User::factory()->create([
             'name' => "zinedine zidanir rizki",
-            'username' => "admin", // Tambahkan ini
-            'email' => "peacemanzidan@gmail.com",
+            'username' => "petugas", // Tambahkan ini
+            'email' => "peacemannauval@gmail.com",
             'email_verified_at' => now(),
-            'password' => Hash::make('admin123'), // password
-            'role' => 'admin',
+            'password' => Hash::make('petugas123'), // password
+            'role' => 'petugas',
             'remember_token' => Str::random(10),
         ]);
 

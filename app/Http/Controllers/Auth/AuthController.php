@@ -2,47 +2,55 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\Controller;
 
 class AuthController extends Controller
 {
-    // Tampilkan halaman login
-    public function index()
+    // Menampilkan halaman login
+    public function showLoginForm()
     {
-        if (Auth::check()) {
-            return redirect()->route('dashboard');
-        }
         return view('auth.login');
     }
 
-    // Proses autentikasi
+    // Proses login
     public function login(Request $request)
     {
-        // Validasi input, kita namai fieldnya "login" agar bisa terima username atau email
+        // Validasi input
         $credentials = $request->validate([
-            'login' => 'required|string',
-            'password' => 'required'
+            'login'    => 'required|string',
+            'password' => 'required|string',
         ]);
 
-        // Cek apakah inputan berformat email atau username
-        $login_type = filter_var($request->input('login'), FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+        // Cek apakah input 'login' adalah email atau username
+        $loginType = filter_var($request->login, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
 
-        // Masukkan ke array untuk proses Auth::attempt
-        $auth_credentials = [
-            $login_type => $request->input('login'),
-            'password' => $request->input('password')
+        // Siapkan credentials untuk Auth::attempt
+        $credentials = [
+            $loginType => $request->login,
+            'password' => $request->password
         ];
 
-        // Coba melakukan login
-        if (Auth::attempt($auth_credentials)) {
+        // Attempt login dengan fitur "Remember Me"
+        if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
-            return redirect()->intended('/dashboard');
+
+            // Redirect berdasarkan role (sesuaikan route name dengan routing Anda)
+            if (Auth::user()->role === 'admin') {
+                return redirect()->intended(route('admin.dashboard'));
+            } 
+            if (Auth::user()->role === 'petugas') {
+                return redirect()->intended(route('petugas.dashboard'));
+            }
+
+            return redirect()->intended(route('dashboard'));
         }
 
-        // Jika gagal, kembalikan ke halaman login dengan pesan error
-        return back()->with('error', 'Username/Email atau Password salah!')->withInput();
+        // Jika gagal, kembali ke halaman login dengan error
+        return back()->withErrors([
+            'login' => 'Username/Email atau password salah.',
+        ])->onlyInput('login');
     }
 
     // Proses logout
@@ -51,6 +59,7 @@ class AuthController extends Controller
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
+        
         return redirect()->route('login');
     }
 }

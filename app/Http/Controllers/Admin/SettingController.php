@@ -3,76 +3,73 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Setting;
 use Illuminate\Http\Request;
+use App\Models\Setting;
+use Illuminate\Support\Facades\Storage;
 
 class SettingController extends Controller
 {
-    // Menampilkan form pengaturan
+    // Menampilkan halaman pengaturan
     public function index()
     {
-        // Ambil data pertama (id=1). Jika belum ada, buat instance baru default
-        $setting = Setting::firstOrNew(['id' => 1]);
+        // Ambil semua settings dan format menjadi array [key => value]
+        $settings = Setting::pluck('value', 'key')->toArray();
         
-        return view('admin.settings.index', compact('setting'));
+        return view('settings.index', compact('settings'));
     }
 
-    // Menyimpan / Update pengaturan
+    // Menyimpan pengaturan
     public function update(Request $request)
     {
-        $request->validate([
-            'nama_perpustakaan' => 'required|string',
-            'denda_per_hari' => 'required|integer|min:0',
-            'maksimal_hari_pinjam' => 'required|integer|min:1',
-            'batas_jumlah_buku' => 'required|integer|min:1',
+        // Validasi input
+        $validated = $request->validate([
+            'nama_perpustakaan'     => 'required|string|max:255',
+            'email_perpustakaan'    => 'required|email|max:255',
+            'telepon_perpustakaan'  => 'required|string|max:20',
+            'alamat_perpustakaan'   => 'required|string',
+            'denda_per_hari'        => 'required|numeric|min:0',
+            'maksimal_hari_pinjam'  => 'required|integer|min:1',
+            'maksimal_jumlah_buku'  => 'required|integer|min:1',
+            'logo_perpustakaan'     => 'nullable|image|mimes:jpg,jpeg,png|max:2048', // Max 2MB
         ]);
 
-        // UpdateOrCreate akan selalu mengupdate data dengan ID 1, tidak akan membuat ID 2
-        Setting::updateOrCreate(
-            ['id' => 1],
-            $request->all()
-        );
+        // Daftar key yang akan diupdate (kecuali logo)
+        $keys = [
+            'nama_perpustakaan',
+            'email_perpustakaan',
+            'telepon_perpustakaan',
+            'alamat_perpustakaan',
+            'denda_per_hari',
+            'maksimal_hari_pinjam',
+            'maksimal_jumlah_buku'
+        ];
 
-        return redirect()->back()->with('success', 'Pengaturan berhasil diperbarui!');
-    }
+        // Looping dan simpan/update data text/number
+        foreach ($keys as $key) {
+            Setting::updateOrCreate(
+                ['key' => $key],
+                ['value' => $validated[$key]]
+            );
+        }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
+        // Proses upload logo jika ada file baru
+        if ($request->hasFile('logo_perpustakaan')) {
+            // Hapus logo lama jika ada
+            $oldLogo = Setting::where('key', 'logo_perpustakaan')->first();
+            if ($oldLogo && $oldLogo->value) {
+                Storage::disk('public')->delete($oldLogo->value);
+            }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+            // Simpan logo baru di folder storage/app/public/logos
+            $path = $request->file('logo_perpustakaan')->store('logos', 'public');
+            
+            Setting::updateOrCreate(
+                ['key' => 'logo_perpustakaan'],
+                ['value' => $path]
+            );
+        }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Setting $setting)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Setting $setting)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Setting $setting)
-    {
-        //
+        return redirect()->route('admin.settings.index')
+                         ->with('success', 'Pengaturan sistem berhasil diperbarui.');
     }
 }
