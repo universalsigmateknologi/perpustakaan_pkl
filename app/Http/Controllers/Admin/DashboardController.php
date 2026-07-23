@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Book;
 use Illuminate\Http\Request;
-use App\Models\Books;
 use App\Models\Member;
 use App\Models\Loan;
 use App\Models\Fine;
@@ -14,7 +14,7 @@ class DashboardController extends Controller
     public function index()
     {
         // Statistik untuk Admin
-        $totalBooks = Books::sum('jumlah');
+        $totalBooks = Book::sum('jumlah');
         $totalMembers = Member::count();
         $activeLoans = Loan::where('status', 'dipinjam')->count();
         $unpaidFines = Fine::where('status', 'belum_bayar')->sum('jumlah');

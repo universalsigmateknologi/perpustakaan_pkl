@@ -2,12 +2,27 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Member extends Model
 {
-    /** @use HasFactory<\Database\Factories\MemberFactory> */
-    use HasFactory;
-    protected $guarded = ['id'];
+    protected $table = 'members';
+
+    protected $fillable = [
+        'kode_member',
+        'nama',
+        'nis_nip',
+        'jenis_kelamin',
+        'alamat',
+        'telepon',
+        'email',
+        'tanggal_daftar',
+        'status',
+    ];
+
+    // Relasi ke transaksi peminjaman
+    public function loans()
+    {
+        return $this->hasMany(Loan::class);
+    }
 }

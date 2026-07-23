@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AuthorController;
+use App\Http\Controllers\Admin\BookController;
 use App\Http\Controllers\Admin\CategoryController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
@@ -53,6 +54,8 @@ Route::middleware('auth')->group(function () {
 
         Route::resource('authors', AuthorController::class);
         Route::resource('publishers', PublisherController::class);
+
+        Route::resource('books', BookController::class);
         
         // Nantinya route master data admin akan ditaruh di sini
     });

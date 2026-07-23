@@ -58,7 +58,7 @@
                 <!-- Menu Khusus Admin -->
                 <div class="pt-4 pb-2 px-3 text-xs font-medium text-gray-400 uppercase tracking-wider">Master Data</div>
                 
-                <a href="#" class="flex items-center px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-sm transition-colors">
+                <a href="{{ route('admin.books.index') }}" class="flex items-center px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-sm transition-colors {{ request()->routeIs('admin.books.*') ? 'bg-gray-100 text-gray-900' : '' }}">
                     <span>Data Buku</span>
                 </a>
                 <a href="{{ route('admin.categories.index') }}" class="flex items-center px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-sm transition-colors {{ request()->routeIs('admin.categories.*') ? 'bg-gray-100 text-gray-900' : '' }}">

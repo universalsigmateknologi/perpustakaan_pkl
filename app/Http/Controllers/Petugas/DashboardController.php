@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Petugas;
 
 use App\Http\Controllers\Controller;
-use App\Models\Books;
+use App\Models\Book;
 use Illuminate\Http\Request;
 use App\Models\Member;
 use App\Models\Loan;
@@ -14,7 +14,7 @@ class DashboardController extends Controller
     public function index()
     {
         // Statistik untuk Petugas (Fokus ke operasional)
-        $availableBooks = Books::sum('tersedia');
+        $availableBooks = Book::sum('tersedia');
         $totalMembers = Member::where('status', 'aktif')->count();
         $activeLoans = Loan::where('status', 'dipinjam')->count();
         $unpaidFines = Fine::where('status', 'belum_bayar')->count();
