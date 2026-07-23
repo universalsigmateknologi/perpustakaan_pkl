@@ -3,64 +3,90 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Category;
 use Illuminate\Http\Request;
+use App\Models\Category;
 
 class CategoryController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Menampilkan daftar kategori
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $search = $request->input('search');
+
+        $categories = Category::when($search, function ($query) use ($search) {
+            $query->where('nama_kategori', 'like', "%{$search}%")
+                  ->orWhere('kode_kategori', 'like', "%{$search}%");
+        })->latest()->paginate(10);
+
+        return view('masters.categories.index', compact('categories'));
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Menampilkan form tambah kategori
      */
     public function create()
     {
-        //
+        return view('masters.categories.create');
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Menyimpan kategori baru
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'nama_kategori' => 'required|string|max:255',
+            'deskripsi'     => 'nullable|string',
+        ]);
+
+        // Generate kode kategori otomatis (KAT-0001, KAT-0002, ...)
+        $lastCategory = Category::latest('id')->first();
+        $lastNumber = $lastCategory ? (int) str_replace('KAT-', '', $lastCategory->kode_kategori) : 0;
+        $newNumber = $lastNumber + 1;
+        $validated['kode_kategori'] = 'KAT-' . str_pad($newNumber, 4, '0', STR_PAD_LEFT);
+
+        Category::create($validated);
+
+        return redirect()->route('admin.categories.index')
+                         ->with('success', 'Kategori berhasil ditambahkan.');
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(Category $category)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
+     * Menampilkan form edit kategori
      */
     public function edit(Category $category)
     {
-        //
+        return view('masters.categories.edit', compact('category'));
     }
 
     /**
-     * Update the specified resource in storage.
+     * Memperbarui data kategori
      */
     public function update(Request $request, Category $category)
     {
-        //
+        $validated = $request->validate([
+            'nama_kategori' => 'required|string|max:255',
+            'deskripsi'     => 'nullable|string',
+        ]);
+
+        $category->update($validated);
+
+        return redirect()->route('admin.categories.index')
+                         ->with('success', 'Kategori berhasil diperbarui.');
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Menghapus kategori
      */
     public function destroy(Category $category)
     {
-        //
+        // Catatan: Karena tabel books foreignId ke categories onDelete('cascade'),
+        // menghapus kategori akan menghapus semua buku di dalamnya.
+        $category->delete();
+
+        return redirect()->route('admin.categories.index')
+                         ->with('success', 'Kategori berhasil dihapus.');
     }
 }
