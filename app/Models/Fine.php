@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Fine extends Model
 {
-    /** @use HasFactory<\Database\Factories\FineFactory> */
-    use HasFactory;
-    protected $guarded = ['id'];
+    protected $table = 'fines';
+
+    protected $fillable = [
+        'kode_denda', 'member_id', 'loan_id', 'jumlah', 'keterangan', 'status', 'tanggal_bayar'
+    ];
 }

@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\PublisherController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\ShelfController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\LoanController;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\Petugas\DashboardController as PetugasDashboardController;
 
@@ -42,6 +43,11 @@ Route::middleware('auth')->group(function () {
 
     // Route Manajemen Anggota (Bisa diakses Admin & Petugas)
     Route::resource('members', MemberController::class);
+
+    // Route Peminjaman (Karena create butuh parameter GET, kita define manual atau gunakan resource)
+    Route::get('/loans', [LoanController::class, 'index'])->name('loans.index');
+    Route::get('/loans/create', [LoanController::class, 'create'])->name('loans.create');
+    Route::post('/loans', [LoanController::class, 'store'])->name('loans.store');
 
     // Grup Route Khusus Admin
     Route::middleware('role:admin')->prefix('admin')->name('admin.')->group(function () {
