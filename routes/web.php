@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\PublisherController;
+use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\ShelfController;
 use App\Http\Controllers\Admin\UserController;
@@ -76,7 +77,23 @@ Route::middleware('auth')->group(function () {
 
         Route::resource('books', BookController::class);
         
-        // Nantinya route master data admin akan ditaruh di sini
+        // Route Laporan
+        Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
+        
+        // Laporan Buku
+        Route::get('/reports/books', [ReportController::class, 'books'])->name('reports.books');
+        Route::get('/reports/books/pdf', [ReportController::class, 'exportBooksPdf'])->name('reports.books.pdf');
+        Route::get('/reports/books/excel', [ReportController::class, 'exportBooksExcel'])->name('reports.books.excel');
+        
+        // Laporan Transaksi
+        Route::get('/reports/transactions', [ReportController::class, 'transactions'])->name('reports.transactions');
+        Route::get('/reports/transactions/pdf', [ReportController::class, 'exportTransactionsPdf'])->name('reports.transactions.pdf');
+        Route::get('/reports/transactions/excel', [ReportController::class, 'exportTransactionsExcel'])->name('reports.transactions.excel');
+        
+        // Laporan Denda
+        Route::get('/reports/fines', [ReportController::class, 'fines'])->name('reports.fines');
+        Route::get('/reports/fines/pdf', [ReportController::class, 'exportFinesPdf'])->name('reports.fines.pdf');
+        Route::get('/reports/fines/excel', [ReportController::class, 'exportFinesExcel'])->name('reports.fines.excel');
     });
 
     // Grup Route Khusus Petugas

@@ -78,7 +78,7 @@
                 <a href="{{ route('admin.settings.index') }}" class="flex items-center px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-sm transition-colors {{ request()->routeIs('admin.settings.*') ? 'bg-gray-100 text-gray-900' : '' }}">
                     <span>Pengaturan</span>
                 </a>
-                <a href="#" class="flex items-center px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-sm transition-colors">
+                <a href="{{ route('admin.reports.index') }}" class="flex items-center px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-sm transition-colors {{ request()->routeIs('admin.reports.*') ? 'bg-gray-100 text-gray-900' : '' }}">
                     <span>Laporan</span>
                 </a>
                 @endif
